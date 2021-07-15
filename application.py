@@ -8,8 +8,9 @@ application = flask.Flask(__name__)
 
 @application.route('/')
 def home():
+	start = time.time()
 	client = boto3.client('sts')
-	while True:
+	while (time.time() - start < 300):
 		try:
 			identity = client.get_caller_identity()
 			return identity['Arn']
