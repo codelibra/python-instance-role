@@ -10,17 +10,16 @@ MESSAGE = "HELLO, WORLD!\n"
 
 @application.route('/')
 def home():
-	logging.basicConfig(level=logging.DEBUG)
-	client = boto3.client('sts')
-	for i in range(10):
-		try:
-			identity = client.get_caller_identity()
-			return identity['Arn']
-		except Exception as e:
-			logging.error("Failed to get caller identity: " + str(e))
-			time.sleep(1)
-			continue
-
+  start = time.time()
+  client = boto3.client('sts')
+  while (time.time() - start < 300):
+    try:
+      identity = client.get_caller_identity()
+      return identity['Arn']
+    except Exception as e:
+      print(e)
+      time.sleep(5)
+      continue
 
 @application.route("/public")
 def root1():
