@@ -48,17 +48,6 @@ def root2():
   result = msg.encode("utf-8")
   return result
 
-@application.route("/aws")
-def root3():
-  client = boto3.client('sts')
-  for i in range(10):
-    try:
-      identity = client.get_caller_identity()
-      return identity['Arn']
-    except Exception as e:
-      print(e)
-      time.sleep(1)
-      continue
 
 if __name__ == '__main__':
 	application.run(debug=True)
