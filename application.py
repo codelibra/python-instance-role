@@ -9,7 +9,7 @@ application = flask.Flask(__name__)
 MESSAGE = "HELLO, WORLD!\n"
 
 @application.route('/')
-def home():
+def sts():
   start = time.time()
   client = boto3.client('sts')
   while (time.time() - start < 300):
@@ -21,33 +21,19 @@ def home():
       time.sleep(5)
       continue
 
-@application.route("/public")
-def root1():
-  hostname = "google.com"
-  response = os.system("ping -c 1 " + hostname)
-  print(response)
-  if response == 0:
-    print (hostname, 'is up!')
-  else:
-    print (hostname, 'is down!')
-
-  msg = MESSAGE + hostname
-  result = msg.encode("utf-8")
-  return result
-
-@application.route("/ip")
-def root2():
-  hostname = "192.30.255.112"
-  response = os.system("ping -c 1 " + hostname)
-  print(response)
-  if response == 0:
-    print (hostname, 'is up!')
-  else:
-    print (hostname, 'is down!')
-  msg = MESSAGE + hostname
-  result = msg.encode("utf-8")
-  return result
-
+@application.route('/ddb')
+def ddb():
+  start = time.time()
+  dynamodb = boto3.resource('dynamodb')
+  while (time.time() - start < 300):
+    try:
+      tables = list(dynamodb.tables.all())
+      return str(tables)
+    except Exception as e:
+      print(e)
+      time.sleep(5)
+      continue
+  return "call failed"
 
 if __name__ == '__main__':
 	application.run(debug=True)
